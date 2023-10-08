@@ -262,3 +262,104 @@ exports.deleteAnnoncePhoto = async (req, res, next) => {
         res.status(500).send('Une erreur s\'est produite lors de la suppression de la photo.');
     }
 };
+
+
+//Recherche d'annonces
+exports.getRechercheAnnonces = async (req, res, next) => {
+    try {
+        const { titre, typeBien, statutBien, prixMin, prixMax, dateDisponibilite } = req.query;
+
+        const filter = {};
+
+        // ajoutez des filtres en fonction des valeurs sélectionnées dans le formulaire
+        if (typeBien) {
+            filter.typeBien = typeBien;
+        }
+        if (statutBien) {
+            filter.statutBien = statutBien;
+        }
+        if (prixMin) {
+            filter.prix = { $gte: prixMin };
+        }
+        if (prixMax) {
+            filter.prix = { ...filter.prix, $lte: prixMax };
+        }
+        if (dateDisponibilite) {
+            filter.dateDisponibilite = { $gte: new Date(dateDisponibilite) };
+        }
+        if (titre) {
+            filter.titre = { $regex: new RegExp(titre, 'i') };
+        }
+
+        // Effectuez la recherche en utilisant le filtre
+        const annonces = await Annonce.find(filter);
+
+        // Vérifiez si l'utilisateur est connecté et obtenez son rôle
+        const isAuthenticated = req.isAuthenticated();
+        const userRole = req.user ? req.user.role : null;
+
+        const currentURL = req.originalUrl; // Récupérez l'URL actuelle
+        let renderData = {
+            annonces,
+            user: req.user,
+            title: 'Annonces',
+            currentPage: 'annonces'
+        };
+
+        if (isAuthenticated) {
+            if (userRole === 'AGENT' && currentURL.endsWith('/mes-annonces')) {
+                renderData.agent = true;
+                renderData.mesAnnonces = true;
+                renderData.currentPage = 'mesAnnonces';
+            }
+        }
+
+        res.render('annonces', renderData);
+    } catch (error) {
+        console.error('Erreur lors de la recherche d\'annonces', error);
+        next(error);
+    }
+};
+
+//route pour permettre à un utilisateur de faire une recherche sur ces propres annonces
+exports.getUserRechercheAnnonces = async (req, res, next) => {
+    try {
+        const isAuthenticated = req.isAuthenticated();
+
+        if (!isAuthenticated) {
+            const errorMessage = req.flash('error')[0];
+            return res.render('login', {
+                user: req.user,
+                errorMessage,
+                title: 'Login'
+            });
+        } else {
+            const { typeAnnonce } = req.query;
+
+            const userId = req.user._id;
+
+            const filter = { idUser: userId };
+
+            if (typeAnnonce) {
+                if (typeAnnonce === 'publiée' || typeAnnonce === 'non publiée') {
+                    filter.statutPublication = typeAnnonce;
+                } else {
+                    filter.statutBien = typeAnnonce;
+                }
+            }
+
+            const annonces = await Annonce.find(filter);
+
+            res.render('annonces', {
+                annonces,
+                user: req.user,
+                title: 'Annonces',
+                agent: true,
+                mesAnnonces: true
+            });
+        }
+    } catch (error) {
+        console.error('Erreur lors de la recherche des annonces de l\'utilisateur', error);
+        next(error);
+    }
+};

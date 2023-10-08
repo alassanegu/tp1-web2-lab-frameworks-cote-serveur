@@ -38,5 +38,9 @@ router.delete('/annonce/:annonceId/delete', annoncesController.deleteAnnonce);
 // Route pour supprimer une photo d'une annonce
 router.delete('/annonce/:annonceId/delete-photo/:photoIndex', annoncesController.deleteAnnoncePhoto);
 
+// route pour la recherche d'annonces
+router.get('/rechercher-annonces',annoncesController.getRechercheAnnonces);
+// route pour la recherche des propres annonces de l'utilisateur
+router.get('/mes-annonces',annoncesController.getUserRechercheAnnonces);
 
 module.exports = router;

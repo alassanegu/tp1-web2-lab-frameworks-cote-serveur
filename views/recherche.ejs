@@ -1,0 +1,94 @@
+<div class="container">
+    <p class="title is-6">Rechercher annonces</p>
+
+    <form action="/rechercher-annonces" method="GET">
+        <div class="columns is-centered">
+            <div class="column ">
+                <div class="field">
+                    <label class="label" for="typeBien">Titre</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select class="is-fullwidth" name="titre" id="typeBien">
+                                <option value="">Choisir une valeur</option>
+                                <option value="maison">Maison</option>
+                                <option value="appartement">Appartement</option>
+                                <option value="studio">Studio</option>
+                                <option value="terrain">Terrain</option>
+                                <option value="bureau">Bureau</option>
+                                <option value="garage">Garage</option>
+                                <option value="ferme">Ferme</option>
+                                <option value="chateau">Château</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column ">
+                <div class="field">
+                    <label class="label" for="typeBien">Type de bien</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select class="is-fullwidth" name="typeBien" id="typeBien">
+                                <option value="">Tous</option>
+                                <option value="vente">À la vente</option>
+                                <option value="location">À la location</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="column ">
+                <div class="field">
+                    <label class="label" for="statutBien">Statut du bien</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select class="is-fullwidth" name="statutBien" id="statutBien">
+                                <option value="">Tous</option>
+                                <option value="disponible">Disponible</option>
+                                <option value="loué">Loué</option>
+                                <option value="vendu">Vendu</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column ">
+                <div class="field">
+                    <label class="label" for="prixMin">Prix minimum</label>
+                    <div class="control">
+                        <input class="input" type="number" name="prixMin" id="prixMin" placeholder="Prix min">
+                    </div>
+                </div>
+            </div>
+
+            <div class="column ">
+                <div class="field">
+                    <label class="label" for="prixMax">Prix maximum</label>
+                    <div class="control">
+                        <input class="input" type="number" name="prixMax" id="prixMax" placeholder="Prix max">
+                    </div>
+                </div>
+            </div>
+
+            <div class="column ">
+                <div class="field">
+                    <label class="label" for="dateDisponibilite">Date de disponibilité</label>
+                    <div class="control">
+                        <input class="input" type="date" name="dateDisponibilite" id="dateDisponibilite">
+                    </div>
+                </div>
+            </div>
+            <div class="column ">
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" type="submit">Rechercher</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
