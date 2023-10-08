@@ -98,6 +98,16 @@
     </div>
 </div>
 
+<style>
+
+    /*Définir une couleur pour la zone dragover au survol de la souris pour déposer une photo*/
+    .dragover {
+        background-color: #00B7FF;
+        border: 2px dashed #000;
+    }
+
+</style>
+
 <%- include('footer')%>
 
     <script>
@@ -156,7 +166,7 @@
 
         function addImageWithDeleteButton(file, selectedPhotosDiv) {
             const imgContainer = document.createElement('div'); //conteneur pour l'image et le bouton
-            imgContainer.classList.add('image-container','w3-col', 's6', 'w3-half'); // Utilisez add() pour ajouter plusieurs classes
+            imgContainer.classList.add('image-container','w3-col', 's6', 'w3-half');
 
 
             const img = document.createElement('img');
