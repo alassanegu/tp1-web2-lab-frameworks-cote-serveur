@@ -1,9 +1,13 @@
 var express = require('express');
 var router = express.Router();
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', async (req, res, next) => {
+  res.render('index', { user : req.user,title:'Home Page',currentPage:'annonces' });
 });
 
+router.get('/error-page', async (req, res, next) => {
+  res.render('error', { user : req.user,title:'Home Page',errorMessage: 'Annonce non trouvée' });
+});
+
+
 module.exports = router;
+
