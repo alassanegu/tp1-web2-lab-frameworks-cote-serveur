@@ -1,0 +1,87 @@
+<%- include('header') %>
+<div class="container w3-card w3-white w3-round">
+    <br>
+    <div class="w3-padding w3-center w3-margin">
+        <p class="title is-4">Questions à propos de l'annonce "<%= titre %>"</p>
+    </div>
+
+    <div class="w3-row-padding">
+    <% if ( typeof user !== 'undefined' && annonce.idUser.toString() !== user._id.toString()) {%>
+        <div class="w3-col s4">
+            <form action="/annonce/<%= annonceId %>/poser-question" method="POST">
+                <div class="field">
+                    <label class="label" for="question">Votre question :</label>
+                    <div class="control">
+                        <textarea class="textarea" name="question" id="question" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" type="submit">Poser la question</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <%}%>
+
+
+        <div class="w3-col s8 ">
+            <% if (questions.length === 0) { %>
+                <p class="title is-5 has-text-centered">
+                    Aucune question pour cette annonce pour le moment
+                </p>
+            <% } else { %>
+                <% questions.forEach(question => { %>
+                    <div class="w3-light-grey w3-padding w3-margin w3-round-large">
+                        <ul>
+                            <li>
+                                <div class="w3-margin-bottom">
+                                    <p class=""><%= question.user.username %></p><br>
+                                    <span class="w3-round-xxlarge w3-grey w3-padding w3-margin-top"><%= question.contenu %></span>
+                                </div>
+                                <% question.reponses.forEach(reponse => { %>
+                                <div class="w3-margin-bottom ">
+                                    <p class=""><%= reponse.username %>:</p><br>
+                                    <span class="w3-round-xxlarge w3-grey w3-padding"><%= reponse.contenu %></span>
+                                </div>
+                                <% }); %>
+                            </li>
+                        </ul>
+                        <form   action="/annonce/<%= annonceId %>/repondre-question/<%= question._id %>" method="POST">
+                            <div class="w3-row-padding">
+                                <div class="w3-col s4">
+                                    <input class="w3-input w3-border w3-round-large" name="reponse" id="reponse-<%= question._id %>" >
+                                </div>
+                                <div class="w3-col s4">
+                                    <button class="w3-green w3-round-large w3-padding">Répondre à cette question</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                <% }); %>
+            <% } %>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Fonction pour afficher la zone de réponse
+    function afficherZoneReponse(questionId) {
+        const zoneReponse = document.getElementById(`zone-reponse-${questionId}`);
+        zoneReponse.style.display = 'block';
+    }
+
+    // Assurez-vous que chaque bouton "Repondre" a un événement de clic associé
+    const boutonsRepondre = document.querySelectorAll('.bouton-repondre');
+    boutonsRepondre.forEach(bouton => {
+        bouton.addEventListener('click', () => {
+            // Obtenez l'ID de la question à partir de l'attribut "data-question-id"
+            const questionId = bouton.getAttribute('data-question-id');
+            afficherZoneReponse(questionId);
+        });
+    });
+</script>
+
+
+<%- include('footer')%>

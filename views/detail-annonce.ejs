@@ -44,21 +44,21 @@
             <p>Disponinble à partir de <%= annonce.dateDisponibilite.toISOString().slice(0, 10) %></p>
             <h4>Description : </h4>
             <p><%= annonce.description %></p>
-            <p><%= user._id %></p> et <p><%= annonce.idUser%></p>
         </div>
-
-        <% if (typeof user !== 'undefined' && user._id.toString() !== annonce.idUser.toString()) {%>
-        <div class="w3-col s4">
-            <div class="w3-center w3-padding w3-margin-top">
-                <a href="/annonce/<%= annonce._id %>/poser-question" class="w3-blue  w3-padding w3-round  w3-card w3-center">Envoyer un message</a>
-            </div>
-        </div>
-        <%} else {%>
+        <% if (typeof user !== 'undefined') {%>
+            <% if (typeof user !== 'undefined' && user._id.toString() !== annonce.idUser.toString()) {%>
             <div class="w3-col s4">
                 <div class="w3-center w3-padding w3-margin-top">
-                    <a href="/annonce/<%= annonce._id %>/poser-question" class="w3-blue  w3-padding w3-round  w3-card w3-center">Répondre les messages</a>
+                    <a href="/annonce/<%= annonce._id %>/poser-question" class="w3-blue  w3-padding w3-round  w3-card w3-center">Envoyer un message</a>
                 </div>
             </div>
+            <%} else {%>
+                <div class="w3-col s4">
+                    <div class="w3-center w3-padding w3-margin-top">
+                        <a href="/annonce/<%= annonce._id %>/poser-question" class="w3-blue  w3-padding w3-round  w3-card w3-center">Répondre les messages</a>
+                    </div>
+                </div>
+            <%}%>
         <%}%>
     </div>
 

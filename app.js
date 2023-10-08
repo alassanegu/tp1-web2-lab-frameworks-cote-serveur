@@ -12,6 +12,7 @@ const flash = require('connect-flash');
 var indexRoutes = require('./routes/index');
 var authRoutes = require('./routes/authentification');
 var annoncesRouter = require('./routes/annoncesRouter');
+var questionRoute = require('./routes/question-reponse');
 var app = express();
 
 // view engine setup
@@ -37,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRoutes);
 app.use('/', authRoutes);
 app.use('/', annoncesRouter);
-
+app.use('/', questionRoute);
 // passport config
 var Account = require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
