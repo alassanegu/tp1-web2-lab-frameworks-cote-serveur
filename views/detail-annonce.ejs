@@ -1,0 +1,89 @@
+<%- include('header') %>
+
+<div class="container w3-card w3-white">
+
+    <div class="w3-row-padding">
+        <h3 class="w3-margin-top w3-center w3-text-blue">Detail annonces</h3>
+        <div class="w3-col s6 w3-margin-top w3-margin-bottom" >
+            <% if (annonce.photos && annonce.photos.length > 0) { %>
+                <img class="w3-round" src="<%= annonce.photos[0].url %>" alt="<%= annonce.title %>" style="width: 100%">
+            <% } else { %>
+                <p>Aucune photo disponible</p>
+            <% } %>
+        </div>
+
+        <div class="w3-col s6 w3-margin-top">
+            <div class="w3-row-padding ">
+                <% if (annonce.photos && annonce.photos.length > 0) { %>
+                    <% annonce.photos.forEach((photo, index) => { %>
+                    <div class="w3-col s6">
+                        <%if (index > 0){%>
+                            <img onclick="document.getElementById('id<%=index%>').style.display='block'" class="w3-round w3-padding" style="width: 100%; height: 200px" src="<%= photo.url %>" alt="<%= annonce.titre %>">
+                        <%}%>
+                    </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>Aucune photo disponible</p>
+                <% } %>
+            </div>
+            <br><br>
+        </div>
+    </div>
+
+
+
+    <div class="w3-container w3-padding-16 w3-row-padding">
+        <div class="w3-col s8 w3-border-right">
+            <h3><%= annonce.titre %></h3>
+            <% if (annonce.typeBien === 'location') { %>
+                <p><strong>A louer</strong></p>
+            <% } else { %>
+                <p><strong>A vendre</strong></p>
+            <% } %>
+            <h6 class="w3-opacity">Prix : <%= annonce.prix %> £</h6>
+            <p>Disponinble à partir de <%= annonce.dateDisponibilite.toISOString().slice(0, 10) %></p>
+            <h4>Description : </h4>
+            <p><%= annonce.description %></p>
+            <p><%= user._id %></p> et <p><%= annonce.idUser%></p>
+        </div>
+
+        <% if (typeof user !== 'undefined' && user._id.toString() !== annonce.idUser.toString()) {%>
+        <div class="w3-col s4">
+            <div class="w3-center w3-padding w3-margin-top">
+                <a href="/annonce/<%= annonce._id %>/poser-question" class="w3-blue  w3-padding w3-round  w3-card w3-center">Envoyer un message</a>
+            </div>
+        </div>
+        <%} else {%>
+            <div class="w3-col s4">
+                <div class="w3-center w3-padding w3-margin-top">
+                    <a href="/annonce/<%= annonce._id %>/poser-question" class="w3-blue  w3-padding w3-round  w3-card w3-center">Répondre les messages</a>
+                </div>
+            </div>
+        <%}%>
+    </div>
+
+
+
+
+    <% if (annonce.photos && annonce.photos.length > 0) { %>
+        <% annonce.photos.forEach((photo, index) => { %>
+        <%if (index>0){%>
+        <div id="id<%=index%>" class="w3-modal">
+            <div class="w3-modal-content">
+                <div class="w3-container">
+                    <span onclick="document.getElementById('id<%=index%>').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                    <img  style="width: 100%" class="images" src="<%= photo.url %>" alt="<%= annonce.titre %>">
+                </div>
+            </div>
+        </div>
+        <%}%>
+        <% }); %>
+    <% } else { %>
+        <p>Aucune photo disponible</p>
+    <% } %>
+
+</div>
+
+
+
+<%- include('footer')%>
