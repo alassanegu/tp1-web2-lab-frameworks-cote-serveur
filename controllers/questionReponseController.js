@@ -55,3 +55,37 @@ exports.poserQuestion = async (req, res, next) => {
         res.status(500).json({ error: 'Erreur lors de la pose de la question' });
     }
 };
+
+exports.respondreQuestion = async (req, res, next) => {
+    try {
+        const { reponse } = req.body;
+        const { annonceId, questionId } = req.params;
+
+        // Créez un nouveau document de réponse
+        const nouvelleReponse = new Reponse({
+            contenu: reponse,
+            question: questionId, // Utilisez l'ID de la question à laquelle répondre
+            user: req.user._id, // Utilisez l'ID de l'utilisateur qui a répondu
+            username: req.user.username,
+        });
+
+        // Enregistrez la nouvelle réponse dans la base de données
+        const reponseEnregistree = await nouvelleReponse.save();
+
+        // Trouvez la question correspondante par son ID
+        const question = await Question.findById(questionId);
+
+        // Ajoutez l'ID de la nouvelle réponse au tableau "reponses" de la question
+        question.reponses.push(reponseEnregistree._id);
+
+        // Enregistrez les modifications de la question dans la base de données
+        await question.save();
+
+        // Redirigez l'utilisateur ou effectuez d'autres actions nécessaires
+        res.redirect(`/annonce/${annonceId}/poser-question`);
+    } catch (error) {
+        console.error(error);
+        // Gérez les erreurs ici, par exemple, en affichant un message d'erreur à l'utilisateur
+        res.status(500).send('Une erreur s\'est produite lors de l\'ajout de la réponse.');
+    }
+};
