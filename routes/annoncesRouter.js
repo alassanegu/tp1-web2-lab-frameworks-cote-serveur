@@ -29,5 +29,14 @@ router.get('/accueil/:userId/mes-annonces', annoncesController.getUserAnnonces);
 // Afficher les détails d'une annonce
 router.get('/annonce/:annonceId', annoncesController.getDetailsAnnonce);
 
+//update d'une annonce
+router.get('/annonce/:annonceId/update', annoncesController.getUpdateAnnonceForm);
+router.post('/annonce/:annonceId/update', upload.array('photos', 8), annoncesController.updateAnnonce);
+
+//supprimer une annonce
+router.delete('/annonce/:annonceId/delete', annoncesController.deleteAnnonce);
+// Route pour supprimer une photo d'une annonce
+router.delete('/annonce/:annonceId/delete-photo/:photoIndex', annoncesController.deleteAnnoncePhoto);
+
 
 module.exports = router;

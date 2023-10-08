@@ -1,0 +1,260 @@
+
+<%- include('header') %>
+<div class="container w3-card w3-white ">
+
+    <div class="w3-row-padding">
+        <div class="w3-col s6 w3-border-right">
+            <h1 class="column title has-text-centered">Créer une annonce</h1>
+
+            <form role="form" action="/annonce/<%= annonce._id %>/update" method="post" style="max-width: 600px;" enctype="multipart/form-data">
+                <div class="field hor">
+                    <label class="label" for="titre">Titre de l'annonce</label>
+                    <div class="control">
+                        <input class="input is-expanded" type="text" name="titre" id="titre_update" value=<%= annonce.titre %> required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="typeBien">Type de bien</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select class="is-fullwidth" name="typeBien" id="typeBien_update" required>
+                                <option value="vente" <% if (annonce.typeBien === 'vente') { %>selected<% } %>>À la vente</option>
+                                <option value="location" <% if (annonce.typeBien === 'location') { %>selected<% } %>>À la location</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="statutPublication">Statut de publication</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select class="is-fullwidth" name="statutPublication" id="statutPublication_update" required>
+                                <option value="publiée" <% if (annonce.statutPublication === 'publiée') { %>selected<% } %>>Publiée</option>
+                                <option value="non publiée" <% if (annonce.statutPublication === 'non publiée') { %>selected<% } %>>Non publiée</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="statutBien">Statut du bien</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select class="is-fullwidth" name="statutBien" id="statutBien_update" required>
+                                <option value="disponible" <% if (annonce.statutBien === 'disponible') { %>selected<% } %>>Disponible</option>
+                                <option value="loué" <% if (annonce.statutBien === 'loué') { %>selected<% } %>>Loué</option>
+                                <option value="vendu" <% if (annonce.statutBien === 'vendu') { %>selected<% } %>>Vendu</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="description">Description</label>
+                    <div class="control">
+                        <textarea class="textarea is-expanded" name="description" id="description_update" required><%= annonce.description %></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="prix">Prix</label>
+                    <div class="control">
+                        <input class="input is-expanded" type="number" name="prix" id="prix_update" value=<%= annonce.prix %> required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="dateDisponibilite">Date de disponibilité</label>
+                    <div class="control">
+                        <input class="input is-expanded" type="date" name="dateDisponibilite" id="dateDisponibilite_update" value="<%= annonce.dateDisponibilite.toISOString().split('T')[0] %>" required>
+                    </div>
+                </div>
+
+                <div class="field dropzone" id="photo-dropzone">
+                    <label for="cover-photo" class="block text-sm font-medium leading-6 text-gray-900">Cover photo</label>
+                    <div class="mt-2 flex justify-center rounded-lg border border-dashed  px-6 py-10 w3-border-black">
+                        <div class="text-center">
+                            <svg class="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
+                            </svg>
+                            <div  class="mt-4 flex text-sm leading-6 text-gray-600">
+                                <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                                    <span>Upload a file</span>
+                                    <input type="file" id="file-input" name="photos"  class="sr-only" multiple>
+                                </label>
+                                <p class="pl-1">or drag and drop</p>
+                            </div>
+                            <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control w3-center">
+                        <button class="button w3-blue w3-center" type="submit">Modifier l'annonce</button>
+                    </div>
+                </div>
+            </form>
+
+            <br>
+        </div>
+        <div class="w3-col s6 w3-border-1" >
+            <div id="selected-photos" class="w3-row-padding w3-margin-top">
+                <% if (annonce.photos && annonce.photos.length > 0) { %>
+                    <% annonce.photos.forEach((photo, index) => { %>
+                        <div class="w3-col s6 w3-half">
+                            <img class="images w3-round" style="width: 100%; height: 200px" src="<%= photo.url %>" alt="<%= annonce.titre %>">
+                            <button class="delete-photo" data-photo-index="<%= index %>" data-annonce-id="<%= annonce._id %>"><i class="material-icons" style="font-size:36px;color:red">delete</i></button>
+                        </div>
+
+                    <% }); %>
+                <% } else { %>
+                    <p>Aucune photo disponible</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<style>
+    .images{
+        width: 250px;
+        height: 250px;
+        margin-right : 10px;
+        margin-bottom: 10px;
+        border: 0.5px black solid;
+    }
+
+</style>
+
+<script>
+    const dropzone = document.getElementById("photo-dropzone");
+    const fileInput = document.getElementById("file-input");
+    const selectedPhotosDiv = document.getElementById("selected-photos");
+
+    // Gestionnaire d'événement pour l'événement "dragover" (survol de la zone)
+    dropzone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropzone.classList.add("dragover"); // Ajoute une classe pour indiquer le survol
+    });
+
+    // Gestionnaire d'événement pour l'événement "dragleave"
+    dropzone.addEventListener("dragleave", () => {
+        dropzone.classList.remove("dragover");
+    });
+
+    // Gestionnaire d'événement pour l'événement "drop" (déposer des fichiers)
+    const selectedFiles = []; // Tableau pour stocker les fichiers sélectionnés
+
+    dropzone.addEventListener("drop", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropzone.classList.remove("dragover");
+        const droppedFiles = e.dataTransfer.files;
+
+        // Ajouter les nouveaux fichiers à la liste selectedFiles
+        for (let i = 0; i < droppedFiles.length; i++) {
+            selectedFiles.push(droppedFiles[i]);
+            addImageWithDeleteButton(droppedFiles[i], selectedPhotosDiv);
+        }
+
+        // Mettre à jour le contenu du champ de fichier avec les fichiers sélectionnés
+        const newInputDataTransfer = new DataTransfer();
+        selectedFiles.forEach((file) => {
+            newInputDataTransfer.items.add(file);
+        });
+        fileInput.files = newInputDataTransfer.files;
+    });
+
+
+    // Gestionnaire d'événement pour le clic (ouverture de la boîte de dialogue de sélection de fichiers)
+    dropzone.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    // Gestionnaire d'événement pour le changement de fichier (sélection de fichiers)
+    fileInput.addEventListener("change", () => {
+        const files = Array.from(fileInput.files);
+        console.log("Fichiers sélectionnés :", files);
+
+        files.forEach((file) => {
+            addImageWithDeleteButton(file, selectedPhotosDiv);
+        });
+
+    });
+
+    // Sélectionnez tous les boutons de suppression
+    const deleteButtons = document.querySelectorAll('.delete-photo');
+
+    // Ajoutez un gestionnaire d'événements pour chaque bouton de suppression
+    deleteButtons.forEach((button) => {
+        button.addEventListener('click', async (e) => {
+            // Empêchez le comportement par défaut du bouton (évite la soumission du formulaire)
+            e.preventDefault();
+
+            // Récupérez l'index de la photo à partir de l'attribut data-photo-index
+            const photoIndex = button.getAttribute('data-photo-index');
+            console.log(photoIndex);
+            const annonceId = button.getAttribute('data-annonce-id');
+            const confirmation = confirm("Voulez-vous vraiment supprimer cette annonce ?");
+
+            if (confirmation){
+                // Envoyez une requête au serveur pour supprimer la photo
+                try {
+                    const response = await fetch(`/annonce/${annonceId}/delete-photo/${photoIndex}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        // La photo a été supprimée avec succès, vous pouvez masquer ou modifier son affichage ici
+                        // Supprimez l'image
+                        const image = button.previousElementSibling;
+                        if (image) {
+                            image.remove();
+                        }
+                        // Supprimez le bouton
+                        button.remove();
+                        window.location.reload(); // Rafraîchit la page
+                    } else {
+                        console.error('Erreur lors de la suppression de la photo.');
+                    }
+                } catch (error) {
+                    console.error('Une erreur s\'est produite lors de la suppression de la photo.', error);
+                }
+            }
+        });
+    });
+    function addImageWithDeleteButton(file, selectedPhotosDiv) {
+        const imgContainer = document.createElement('div'); // Créez un conteneur pour l'image et le bouton
+        imgContainer.classList.add('image-container','w3-col', 's6', 'w3-half'); // Utilisez add() pour ajouter plusieurs classes
+
+
+        const img = document.createElement('img'); // Créez un élément img
+        img.src = URL.createObjectURL(file); // Définissez l'attribut src avec l'URL des données du fichier
+        img.classList.add('uploaded-image', 'w3-round'); // Ajoutez une classe pour appliquer des styles si nécessaire
+        // Ajoutez des styles de largeur et de hauteur
+        img.style.width = '100%'; // Remplacez '100%' par la largeur souhaitée en pixels
+        img.style.height = '200px'; // Remplacez '200px' par la hauteur souhaitée en pixels
+
+
+        const deleteButton = document.createElement('button'); // Créez un bouton "Supprimer"
+        deleteButton.classList.add('delete-button');
+        deleteButton.innerHTML = '<i class="material-icons" style="font-size:36px;color:red">delete</i>';
+
+        // Ajoutez l'img et le bouton au conteneur d'images
+        imgContainer.appendChild(img);
+        imgContainer.appendChild(deleteButton);
+
+        deleteButton.addEventListener("click", (e) => {
+            img.remove();
+            deleteButton.remove();
+        });
+
+        selectedPhotosDiv.appendChild(imgContainer);
+    }
+</script>
+
