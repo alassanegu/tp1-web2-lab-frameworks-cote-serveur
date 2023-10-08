@@ -20,5 +20,14 @@ const upload = multer({ storage: storage });
 router.get('/add-annonce', annoncesController.getAddAnnonceForm);
 router.post('/add-annonce', upload.array('photos', 10), annoncesController.addAnnonce);
 
+//toutes les annonces publiées
+router.get('/annonces', annoncesController.getAnnoncesPubliees);
+
+//les annonces d'un utilisateur userId
+router.get('/accueil/:userId/mes-annonces', annoncesController.getUserAnnonces);
+
+// Afficher les détails d'une annonce
+router.get('/annonce/:annonceId', annoncesController.getDetailsAnnonce);
+
 
 module.exports = router;

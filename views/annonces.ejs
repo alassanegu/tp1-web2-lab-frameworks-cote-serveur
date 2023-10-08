@@ -1,0 +1,126 @@
+<%- include('header') %>
+
+<% if (typeof mesAnnonces === 'undefined') { %>
+<% } else {%>
+<div class="container">
+    <label class="label" for="typeAnnonce">Rechercher</label>
+    <form action="/mes-annonces" method="GET">
+        <div class="columns">
+            <div class="column is-one-fifth field is-flex">
+                <div class="field">
+                    <div class="control">
+                        <div class="select is-info is-medium">
+                            <select class="" name="typeAnnonce" id="statutPublication">
+                                <option value="">Tous</option>
+                                <option value="publiée">Publiée</option>
+                                <option value="non publiée">Non publiée</option>
+                                <option value="vendu">Vendu</option>
+                                <option value="loué">Loué</option>
+                                <option value="disponible">Disponible</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-one-fifth is-flex align-items-center">
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" type="submit">Rechercher</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<% } %>
+
+<br>
+<div class="container">
+    <% if (typeof mesAnnonces === 'undefined') { %>
+        <h1 class="title w3-center w3-text-blue">Annonces disponibles</h1>
+        <br>
+    <% } else {%>
+        <h1 class="title w3-center w3-text-blue">Mes Annonces</h1>
+        <br>
+    <% } %>
+
+    <% if (annonces.length === 0) { %>
+        <p class="title is-4 has-text-danger">Aucune annonce disponible pour le moment.</p>
+    <% } else { %>
+        <div class="columns is-multiline">
+            <% annonces.forEach((annonce) => { %>
+                <div class="column is-one-third">
+                    <div class="annonce box">
+                        <% if (annonce.photos && annonce.photos.length > 0) { %>
+                            <a href="/annonce/<%= annonce._id %>">
+                                <img class="" src="<%= annonce.photos[0].url %>" alt="<%= annonce.titre %>" style="width: 100%; height: 250px">
+                            </a>
+                        <% } else { %>
+                        <a href="/annonce/<%= annonce._id %>">
+                            <p>Aucune photo disponible</p>
+                        </a>
+                        <% } %>
+                            <div class="w3-container w3-padding-16">
+                                <h3 class=""><%= annonce.titre %></h3>
+                                <h4 class="w3-opacity">à <%= annonce.prix %> EUR</h4>
+                                <% if (annonce.typeBien === 'location') { %>
+                                    <p><strong>à louer</strong></p>
+                                <% } else { %>
+                                    <p><strong>A vendre</strong></p>
+                                <% } %>
+                                <p>Disponible à partir de <%= annonce.dateDisponibilite.toISOString().slice(0, 10) %></p>
+                            </div>
+
+                        <% if (typeof user !== 'undefined' && user) { %>
+                            <% if (typeof agent !== 'undefined' && user.role === 'AGENT' && agent) { %>
+                                <footer class="card-footer">
+                                    <a href="/annonce/<%= annonce._id %>/update" class="card-footer-item"><i class="fa fa-edit" style="font-size:36px;color:#3a51bb"></i></a>
+                                    <a href="/annonce/<%= annonce._id %>/delete" data-annonce-id="<%= annonce._id %>" class="card-footer-item btn-delete"><i class="material-icons" style="font-size:36px;color:red">delete</i></a>
+                                </footer>
+                            <% }  %>
+                        <% }  %>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+</div>
+
+<%- include('footer')%>
+
+<script>
+    // Sélectionnez tous les boutons "supprimer"
+    const deleteButtons = document.querySelectorAll('.card-footer-item.btn-delete');
+
+    // Attachez un gestionnaire d'événements de clic à chaque bouton
+    deleteButtons.forEach((button) => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault(); // Empêchez le lien de suivre le lien href
+            const annonceId = button.getAttribute('data-annonce-id');
+
+            // Demandez une confirmation à l'utilisateur
+            const confirmation = confirm("Voulez-vous vraiment supprimer cette annonce ?");
+
+            // Si l'utilisateur a confirmé, envoyez une requête de suppression au serveur
+            if (confirmation) {
+                fetch(`/annonce/${annonceId}/delete`, {
+                    method: 'DELETE'
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            // La suppression a réussi, redirigez ou actualisez la page
+                            window.location.reload(); // Par exemple, actualisez la page actuelle
+                        } else {
+                            console.error('Erreur lors de la suppression de l\'annonce');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Une erreur s\'est produite lors de la suppression de l\'annonce', error);
+                    });
+            }
+        });
+    });
+</script>
+
+
+
