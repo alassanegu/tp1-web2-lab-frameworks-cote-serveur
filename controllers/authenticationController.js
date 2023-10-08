@@ -40,6 +40,30 @@ exports.register = async (req, res, next) => {
     }
 };
 
+//login
+exports.getLogin = (req, res) =>{
+    const errorMessage = req.flash('error')[0];
+    res.render('login', { user : req.user,errorMessage, title:'Login' });
+};
+exports.login = (req, res, next) => {
+    passport.authenticate('local', {
+        failureRedirect: '/login',
+        failureFlash: true,
+    })(req, res, function () {
+        res.redirect('/accueil/' + req.user._id);
+    });
+};
+
+//logout
+exports.getLogout = (req, res) =>{
+    req.logout(function(err) {
+        if (err) {
+            console.error(err);
+        }
+        res.redirect('/');
+    });
+};
+
 //Page d'accueil utilisateur apres authentification
 exports.userHomePage = async (req, res, next) => {
     try {
